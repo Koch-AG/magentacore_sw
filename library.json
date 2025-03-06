@@ -1,0 +1,56 @@
+{
+    "name": "MagentaCore",
+    "version": "1.0.0",
+    "description": "Schnuppilehrlings Projekt",
+    "keywords": "LED Matrix, schnuppi, ESP32",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/Koch-AG/magentacore_sw.git"
+    },
+    "authors":
+    [
+      {
+        "name": "Nora Hueppi",
+        "email": "entwicklung@kochag.ch",
+        "url": "https://www.kochag.ch",
+        "maintainer": true
+      }
+    ],
+    "export": {
+        "exclude":
+        [
+            "test/*",
+            "src/main.cpp"
+        ]
+    }, 
+    "license": "MIT",
+    "homepage": "http://koch-ag.github.io/matrix/",
+    "dependencies":
+    [
+        {
+            "owner": "xylopyrographer",
+            "name": "LiteLED",
+            "version": "^1.2.0"
+        },
+        {
+            "owner": "madhephaestus",
+            "name": "ESP32Encoder",
+            "version": "^0.11.7"
+        },{
+            "owner": "end2endzone",
+            "name": "NonBlockingRTTTL",
+            "version": "^1.3.0"
+        },{
+            "owner": "madhephaestus",
+            "name": "ESP32Servo",
+            "version": "^3.0.6"
+        },{
+            "owner": "simsso",
+            "name": "ShiftRegister74HC595",
+            "version": "^1.3.1"
+        }
+    ],
+    "frameworks": ["arduino"],
+    "platforms": ["espressif32"]
+  }
