@@ -53,7 +53,7 @@ class MagentaCore{
         // @param Optional. Set an upper limit. Normally set to 1024.
         // @param Optional. Set a lower limit. Normally set to 0.
         // @param Optional. Set a step factor. Normally set to 43.
-        void ConfigPoti(int max = 1024, int min = 0, int faktor = -43);
+        void ConfigPoti(int max = 1024, int min = 0, int faktor = -40);
 
         // @brief Indicates examples for the LED matrix.
         // @param pattern indicates the sample.

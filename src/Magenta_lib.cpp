@@ -278,7 +278,7 @@ void MagentaCore::sample(int pattern) {
 }
 
 int MagentaCore::getButtonPress(char pcfState) {
-    printf("getButtonPress aufgerufen\n");
+    // printf("getButtonPress aufgerufen\n");
     if((pcfState & BUTTON_RE_L) == 0) {
         button_1 = 0x01;
         return button_1;
@@ -359,7 +359,7 @@ void MagentaCore::getSensor() {
     accelerometer_x = -y;
     accelerometer_y = x;
     accelerometer_z = z;
-    printf("X:%f - Y:-%f - Z:%f\n", x,y,z);
+    // printf("X:%f - Y:-%f - Z:%f\n", x,y,z);
 }
 
 void MagentaCore::getSensorData(float *X_DataOut, float *Y_DataOut, float *Z_DataOut)
@@ -395,7 +395,7 @@ void MagentaCore::Buzzer(int tone) {
 
 void MagentaCore::setServo1(int grad) {
     servo1.write(grad);
-    printf("Grad: %i\n", grad);
+    // printf("Grad: %i\n", grad);
 }
 
 void MagentaCore::setServo2(int grad) {
