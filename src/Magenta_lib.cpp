@@ -292,19 +292,24 @@ int MagentaCore::getButtonPress(char pcfState) {
         return button_3;
     }
     else if((pcfState & BUTTON_U) == 0) {
-        return BUTTON_U;
+        button_Up = 0x01;
+        return button_Up;
     }
     else if((pcfState & BUTTON_D) == 0) {
-        return BUTTON_D;
+        button_Down = 0x01;
+        return button_Down;
     }
     else if((pcfState & BUTTON_L) == 0) {
-        return BUTTON_L;
+        button_Left  = 0x01;
+        return button_Left;
     }
     else if((pcfState & BUTTON_R) == 0) {
-        return BUTTON_R;
+        button_Right = 0x01;
+        return button_Right;
     }
     else if((pcfState & BUTTON_C) == 0) {
-        return BUTTON_C;
+        button_Center = 0x01;
+        return button_Center;
     }
     return 0;
     // printf("getButtonPress fertig\n");

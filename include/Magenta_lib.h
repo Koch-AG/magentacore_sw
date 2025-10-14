@@ -104,9 +104,14 @@ class MagentaCore{
         // @brief Write a space in all 14-segment positions. This means that the display no longer lights up, it clears it.
         void clearSegmentAnzeige();
 
-        int button_1;   // < Stores the states (e.g., pressed or not) of buttons.
-        int button_2;   // < Stores the states (e.g., pressed or not) of buttons.
-        int button_3;   // < Stores the states (e.g., pressed or not) of buttons.
+        int button_1;        // < Stores the states (e.g., pressed or not) of buttons.
+        int button_2;        // < Stores the states (e.g., pressed or not) of buttons.
+        int button_3;        // < Stores the states (e.g., pressed or not) of buttons.
+        int button_Up;       // < Stores the states (e.g., pressed or not) of buttons.
+        int button_Right;    // < Stores the states (e.g., pressed or not) of buttons.
+        int button_Down;     // < Stores the states (e.g., pressed or not) of buttons.
+        int button_Left;     // < Stores the states (e.g., pressed or not) of buttons.
+        int button_Center;   // < Stores the states (e.g., pressed or not) of buttons.
 
         float accelerometer_x;  // < Stores the accelerometer readings for each axis (X).
         float accelerometer_y;  // < Stores the accelerometer readings for each axis (Y).
