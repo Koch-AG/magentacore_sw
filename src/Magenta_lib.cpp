@@ -98,7 +98,7 @@ int MagentaCore::read_io() {
     char pcfState;
     // microseconds_now = micros();
     pcfState = pcf_read();
-    RotaryEncoder_Poti();
+    updateRotaryEncoderPoti();
     // printf("pcfState: %i\n", pcfState);
 
     button_1 = button_2 = button_3 = button_Center = button_Up = button_Right = button_Down = button_Left = 0x00;
