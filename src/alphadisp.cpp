@@ -27,7 +27,7 @@ SemaphoreHandle_t mtx_datalock;
 static const uint16_t alphanumeric_segs[96][2]{
 	// nmlkjihgfedcba
 	{EMPTY,EMPTY}, // ' ' (space)
-	{EMPTY,EMPTY}, // '!'
+	{SIG_A & SIG_B & SIG_C & SIG_D & SIG_E & SIG_F & SIG_G1,SIG_G2 & SIG_H & SIG_J & SIG_K & SIG_L & SIG_M & SIG_N}, // '!'
 	{EMPTY,EMPTY}, // '"'
  	{EMPTY,EMPTY}, // '#'
 	{EMPTY,EMPTY}, // '$'
