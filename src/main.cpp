@@ -1,3 +1,33 @@
+#include <Magenta_lib.h>
+
+#define COLOR   1
+#define BGCOLOR 2
+
+#define PURPLE  1
+#define BLUE    2
+#define RED     3
+#define GREEN   4
+#define WHITE   5
+
+#define NORA  1
+#define REMO  2
+
+#define ACC 1
+
+#define SERVO1  1
+#define SERVO2  2
+
+#define HIGH  1
+#define LOW   2
+
+#define PEEPHIGH  0
+#define PEEPLOW   1
+
+int Counter = 0;
+
+int potentiometer_last1 = 0;
+int potentiometer_last2 = 0;
+int potentiometer_last3 = 0;
 
 int button_last1      = 0;
 int button_last2      = 0;
