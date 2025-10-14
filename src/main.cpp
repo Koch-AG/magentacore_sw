@@ -12,7 +12,8 @@
 #define NORA  1
 #define REMO  2
 
-#define ACC 1
+#define ACC         1
+#define WRITE_ARRAY 2
 
 #define SERVO1  1
 #define SERVO2  2
@@ -56,6 +57,8 @@ int move = 0;
 int grad1 = 0;
 int grad2 = 0;
 
+byte data[8];
+
 void setup() 
 {
   Serial.begin(115200);
@@ -70,12 +73,12 @@ void setup()
 //     case HIGH:
 //       magentaobj.Buzzer(PEEPHIGH);
 //       break;
-    
+//    
 //     case LOW:
 //       magentaobj.Buzzer(PEEPLOW);
 //       break;
 //   }
-  
+//  
 // }
 
 void ChangeColor()
@@ -320,7 +323,7 @@ void ReadButton()
 
   if(magentaobj.button_Center != button_lastCenter && magentaobj.button_Center == 1)
   {
-    acc = 0;
+    acc = WRITE_ARRAY;
     servo = SERVO2;
 
     grad2 = random(1, 180);
@@ -414,6 +417,36 @@ void ReadButton()
   button_lastLeft = magentaobj.button_Left;
 }
 
+void LEDs_anzuenden_XY(byte X, byte Y)
+{
+	int x_wert = 128;
+	for(int i = 0; i < X; i++) {
+		x_wert = x_wert / 2;
+	}
+	data[Y] = data[Y] | x_wert;
+}
+
+void SMILEY_HAPPY()
+{
+	LEDs_anzuenden_XY(1, 1);
+	LEDs_anzuenden_XY(2, 1);
+	LEDs_anzuenden_XY(5, 1);
+	LEDs_anzuenden_XY(6, 1);
+
+	LEDs_anzuenden_XY(1, 2);
+	LEDs_anzuenden_XY(2, 2);
+	LEDs_anzuenden_XY(5, 2);
+	LEDs_anzuenden_XY(6, 2);
+
+	LEDs_anzuenden_XY(1, 4);
+	LEDs_anzuenden_XY(6, 4);
+
+	LEDs_anzuenden_XY(2, 5);
+	LEDs_anzuenden_XY(3, 5);
+	LEDs_anzuenden_XY(4, 5);
+	LEDs_anzuenden_XY(5, 5);
+}
+
 void printStats()
 {
 //   printf("change: %i\n", change);
@@ -466,7 +499,12 @@ void loop()
   {
     case ACC:
       Accelerometer();
-      break;
+    break;
+
+    case WRITE_ARRAY:
+        SMILEY_HAPPY();
+        magentaobj.write_array(&data[0]);
+    break;
     
     default:
         Counter ++;
@@ -483,7 +521,7 @@ void loop()
           Counter = 0;
         }
       }
-      break;
+    break;
   }
 
   ChangeColor();
