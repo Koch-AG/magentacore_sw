@@ -30,12 +30,12 @@ class MagentaCore{
         // @param byte6 Sets the 8 LEDs in the sixth column.
         // @param byte7 Sets the 8 LEDs in the seventh column.
         // @param byte8 Sets the 8 LEDs in the eighth column.
-        void write (byte byte1, byte byte2, byte byte3, byte byte4,
-                    byte byte5, byte byte6, byte byte7, byte byte8);
+        void write (byte dataRow1, byte dataRow2, byte dataRow3, byte dataRow4,
+                    byte dataRow5, byte dataRow6, byte dataRow7, byte dataRow8);
 
         // @brief takes an array of 8 bytes (matrix[]) and copies its values into the data[] array, one byte at a time.
         // @param matrix[]: An array of 8 bytes to be copied into the data[] array.
-        void write_array(byte matrix[]);
+        void write_array(byte matrixData[]);
 
         // @brief displays a character on a matrix display by reading the font data for the character, clearing the display, and writing the corresponding pixel data to the matrix.
         // @param character: The character to display on the matrix.
@@ -45,16 +45,16 @@ class MagentaCore{
         // @param r Sets how bright red should be when the LED should light up.
         // @param g Sets how bright green should be when the LED should light up.
         // @param b Sets how bright blue should be when the LED should light up.
-        // @param BGC_r Optional. Sets how strongly the red LED should be when the LED should not light up. Normally set to 0.
-        // @param BGC_g Optional. Sets how strongly the green LED should be when the LED should not light up. Normally set to 0.
-        // @param BGC_b Optional. Sets how strongly the blue LED should be when the LED should not light up. Normally set to 0. 
-        void setColor(byte r, byte g, byte b, byte BGC_r = 0, byte BGC_g = 0, byte BGC_b = 0);
+        // @param backgroundColor_r Optional. Sets how strongly the red LED should be when the LED should not light up. Normally set to 0.
+        // @param backgroundColor_g Optional. Sets how strongly the green LED should be when the LED should not light up. Normally set to 0.
+        // @param backgroundColor_b Optional. Sets how strongly the blue LED should be when the LED should not light up. Normally set to 0. 
+        void setColor(byte r, byte g, byte b, byte backgroundColor_r = 0, byte backgroundColor_g = 0, byte backgroundColor_b = 0);
 
         // @brief Sets the settings for the potentiometer.
-        // @param Optional. Set an upper limit. Normally set to 1024.
-        // @param Optional. Set a lower limit. Normally set to 0.
-        // @param Optional. Set a step factor. Normally set to 43.
-        void ConfigPoti(int max = 1024, int min = 0, int faktor = -40);
+        // @param max Optional. Set an upper limit. Normally set to 1024.
+        // @param min Optional. Set a lower limit. Normally set to 0.
+        // @param faktor Optional. Set a step factor. Normally set to 43.
+        void configPoti(int max = 1024, int min = 0, int faktor = -40);
 
         // @brief Indicates examples for the LED matrix.
         // @param pattern indicates the sample.
@@ -66,13 +66,13 @@ class MagentaCore{
             int getButtonPress(char pcfState);
         
         // @brief updates virtual potentiometer values based on rotary encoder input, applying step-based increments and enforcing optional min/max limits.
-        void RotaryEncoder_Poti();
+        void updateRotaryEncoderPoti();
 
         // @brief fetches X, Y, and Z acceleration values from the STK8321 sensor and stores them in the given output pointers.
         // @param *X_DataOut Pointer to store the X-axis acceleration value.
         // @param *Y_DataOut Pointer to store the Y-axis acceleration value.
         // @param *Z_DataOut Pointer to store the Z-axis acceleration value.
-        void getSensorData(float *X_DataOut, float *Y_DataOut, float *Z_DataOut);
+        void getSensorData(float *dataOut_x, float *dataOut_y, float *dataOut_z);
 
         // @brief reads accelerometer data and assigns the values to internal variables, applying a coordinate transformation by swapping and negating the X and Y axes.
         void getSensor();
@@ -84,7 +84,7 @@ class MagentaCore{
         
         // @brief Indicates examples for the Buzzer.
         // @param tone Provides sound examples.
-        void Buzzer(int tone);
+        void playBuzzer(int tone);
         
         // @brief Moves the servo to a specified position.
         // @param grad Specifies the value where the servo should be positioned. Normally set to 0.
@@ -117,9 +117,9 @@ class MagentaCore{
         float accelerometer_y;  // < Stores the accelerometer readings for each axis (Y).
         float accelerometer_z;  // < Stores the accelerometer readings for each axis (Z).
 
-        int potentiometer_0;    // < Stores the values for the three potentiometers.
         int potentiometer_1;    // < Stores the values for the three potentiometers.
         int potentiometer_2;    // < Stores the values for the three potentiometers.
+        int potentiometer_3;    // < Stores the values for the three potentiometers.
 
 
     private:
