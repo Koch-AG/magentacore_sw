@@ -101,7 +101,7 @@ int MagentaCore::read_io() {
     RotaryEncoder_Poti();
     // printf("pcfState: %i\n", pcfState);
 
-    button_1 = button_2 = button_3 = 0x00;
+    button_1 = button_2 = button_3 = button_Center = button_Up = button_Right = button_Down = button_Left = 0x00;
 
     if (pcfState != 255) {
         getButtonPress(pcfState);
