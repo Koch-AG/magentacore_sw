@@ -186,6 +186,8 @@ void MagentaCore::write_array(byte matrixData[]) {
     for(int i = 0; i < 8; i++) {
         data[i] = matrixData[i];
     }
+
+    writeDataToLED();
 }
 
 void MagentaCore::write_char(char character) {
