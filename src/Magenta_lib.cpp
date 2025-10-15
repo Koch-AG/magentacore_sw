@@ -31,9 +31,9 @@
 #define SERVO2PIN 15
 
 #define BUZZER_PIN 48
-const char * BeepHigh = "BeepHigh:d=4,o=5,b=100:2a5";
-const char * BeepLow = "BeepLow: d=4,o=5,b=100:2a4";
-const char * HauntedHouse = "FurElise:d=4,o=5,b=60:32e6,32d#6,32e6,32d#6,32e6,32b5,32d6,32c6,32a5,16p,32c5,32e5,32a5,32b5,16p,32e5,32gs5,32b5,32c6,16p,32e5,32e6,32d#6,32e6,32d#6,32e6,32b5,32d6,32c6,32a5,16p,32c5,32e5,32a5,32b5,16p,32e5,32c6,32b5,32a5,8e5,8c5,8a4,8b4,8p,8e4,8gs4,8b4,8c5,8p,8e4,8e5,8d#5,8e5,8d#5,8e5,8b4,8d5,8c5,8a4,16p,8c4,8e4,8a4,8b4,16p,8e4,8c5,8b4,8a4,8e5,8c5,8a4,8b4,8p,8e4,8e5,8d#5,8e5,8d#5,8e5,8b4,8d5,8c5,8a4,16p,8c4,8e4,8a4,8b4,16p,8e4,8c5,8b4,8a4";
+const char * BeepHigh = "BeepHigh:d=4,o=5,b=100:1a5";
+const char * BeepLow = "BeepLow:d=4,o=5,b=100:2a4";
+const char * FurElise = "FurElise:d=4,o=5,b=60:32e6,32d#6,32e6,32d#6,32e6,32b5,32d6,32c6,32a5,16p,32c5,32e5,32a5,32b5,16p,32e5,32gs5,32b5,32c6,16p,32e5,32e6,32d#6,32e6,32d#6,32e6,32b5,32d6,32c6,32a5,16p,32c5,32e5,32a5,32b5,16p,32e5,32c6,32b5,32a5,8e5,8c5,8a4,8b4,8p,8e4,8gs4,8b4,8c5,8p,8e4,8e5,8d#5,8e5,8d#5,8e5,8b4,8d5,8c5,8a4,16p,8c4,8e4,8a4,8b4,16p,8e4,8c5,8b4,8a4,8e5,8c5,8a4,8b4,8p,8e4,8e5,8d#5,8e5,8d#5,8e5,8b4,8d5,8c5,8a4,16p,8c4,8e4,8a4,8b4,16p,8e4,8c5,8b4,8a4";
 
 LiteLED magentacoreLed( LED_TYPE, LED_TYPE_IS_RGBW );    // create the LiteLED object; we're calling it "myLED"
 
@@ -394,10 +394,14 @@ void MagentaCore::playBuzzer(int tone) {
             
             break;
         case 2:
-            rtttl::begin(BUZZER_PIN, HauntedHouse);
+            rtttl::begin(BUZZER_PIN, FurElise);
             
             break;
     }
+}
+
+bool MagentaCore::isBuzzerPlaying(){
+    return rtttl::isPlaying();
 }
 
 void MagentaCore::setServo1(int grad) {

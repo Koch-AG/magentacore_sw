@@ -5,14 +5,14 @@ class MagentaCore{
     public:
         MagentaCore();
 
-            // @brief The function reads the status of several buttons or inputs connected to a port expander. This chip is connected to the device 
+            // @brief The function pcf_read() reads the status of several buttons or inputs connected to a port expander. This chip is connected to the device 
             // via an I²C connection. First, the function checks whether the port expander is accessible. If so, it requests the current data from the chip. 
             // The chip sends back a byte that stores which of the eight inputs are currently active (e.g., button pressed) or inactive. The function returns 
             // this value so that the main program knows which buttons are currently pressed.
             // @return pcfBuffer
             int pcf_read();
 
-            // @brief The function processes data in the background and returns the value of the shift register to which the buttons are connected. 
+            // @brief The function read_io() processes data in the background and returns the value of the shift register to which the buttons are connected. 
             // The buttons are debounced and the button status is stored in the variables button_1 to button_3 and the Joystick. It also calculates the potentiometer 
             // values of the rotary encoders and stores them in potentiometer_1 to potentiometer_3. Finally, it reads the values of the acceleration 
             // sensor (ACC sensor) and stores them in the corresponding variables accelerometer_x to accelerometer_z.
@@ -109,6 +109,10 @@ class MagentaCore{
         // (e.g., BeepHigh, BeepLow, HauntedHouse) is started at the buzzer pin.
         // @param tone Provides sound examples.
         void playBuzzer(int tone);
+        
+        // @brief The isBuzzerPlaying() function is a simple status-check function that returns whether the buzzer is playing.
+        // @return 1 if the Buzzer ist playing 0 if it doesn't play
+        bool isBuzzerPlaying();
         
         // @brief The setServo1() function sets the servo to the position specified in degrees (0-180). The servo compares the current position with the desired position in the background.
         // @param grad Specifies the value where the servo should be positioned. Normally set to 0.
