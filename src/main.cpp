@@ -12,8 +12,8 @@
 #define NORA  1
 #define REMO  2
 
-#define ACC         1
-#define WRITE_ARRAY 2
+// #define ACC         1
+// #define WRITE_ARRAY 2
 
 #define SERVO1  1
 #define SERVO2  2
@@ -61,11 +61,26 @@ int grad2 = 0;
 
 byte data[8];
 
+
+#define ACC         1
+#define POTI        2
+#define BUZZER      3
+#define SERVO       4
+#define PROGRESSBAR 5
+#define JOYSTICK    6
+#define RE_BUTTONS  7
+#define WRITE       8
+#define WRITE_ARRAY 9
+#define WRITE_CHAR  10
+#define SAMPLE      11
+
+int test = 1;
+
 void setup()
 {
     Serial.begin(115200);
     magentaobj.init();
-    magentaobj.setSegmentAnzeige('!', '!', '!', '!');
+    magentaobj.setSegmentAnzeige('T', 'E', 'S', 'T');
 }
 
 void Buzzer()
@@ -216,44 +231,44 @@ void ChangeColor()
 
 }
 
-void Accelerometer()
-{
-    move = ((magentaobj.accelerometer_x + 1) * 4);
-
-	if((magentaobj.accelerometer_y >= 0.8) && (magentaobj.accelerometer_y <= 0.95))
-	{
-	    magentaobj.write((0x80 >> move), 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
-	}
-	if((magentaobj.accelerometer_y >= 0.5) && (magentaobj.accelerometer_y <= 0.7))
-	{
-		magentaobj.write(0x00, (0x80 >> move), 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
-	}
-	if((magentaobj.accelerometer_y >= 0.2) && (magentaobj.accelerometer_y <= 0.4))
-	{
-		magentaobj.write(0x00, 0x00, (0x80 >> move), 0x00, 0x00, 0x00, 0x00, 0x00);
-	}
-	if((magentaobj.accelerometer_y >= 0) && (magentaobj.accelerometer_y <= 0.2))
-	{
-		magentaobj.write(0x00, 0x00, 0x00, (0x80 >> move), 0x00, 0x00, 0x00, 0x00);
-	}
-
-	if((magentaobj.accelerometer_y >= -0.2) && (magentaobj.accelerometer_y <= -0))
-	{
-		magentaobj.write(0x00, 0x00, 0x00, 0x00, (0x80 >> move), 0x00, 0x00, 0x00);
-	}
-	if((magentaobj.accelerometer_y >=  -0.4) && (magentaobj.accelerometer_y <= -0.2))
-	{
-		magentaobj.write(0x00, 0x0, 0x00, 0x00, 0x00, (0x80 >> move), 0x00, 0x00);
-	}
-	if((magentaobj.accelerometer_y >= -0.7) && (magentaobj.accelerometer_y <= -0.5))
-	{
-		magentaobj.write(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (0x80 >> move), 0x00);
-	}
-	if((magentaobj.accelerometer_y >= -0.95) && (magentaobj.accelerometer_y <= -0.8))
-	{
-		magentaobj.write(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (0x80 >> move));
-	}
-}
+// void Accelerometer()
+// {
+//     move = ((magentaobj.accelerometer_x + 1) * 4);
+//
+// 	if((magentaobj.accelerometer_y >= 0.8) && (magentaobj.accelerometer_y <= 0.95))
+// 	{
+// 	    magentaobj.write((0x80 >> move), 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+// 	}
+// 	if((magentaobj.accelerometer_y >= 0.5) && (magentaobj.accelerometer_y <= 0.7))
+// 	{
+// 		magentaobj.write(0x00, (0x80 >> move), 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+// 	}
+// 	if((magentaobj.accelerometer_y >= 0.2) && (magentaobj.accelerometer_y <= 0.4))
+// 	{
+// 		magentaobj.write(0x00, 0x00, (0x80 >> move), 0x00, 0x00, 0x00, 0x00, 0x00);
+// 	}
+// 	if((magentaobj.accelerometer_y >= 0) && (magentaobj.accelerometer_y <= 0.2))
+// 	{
+// 		magentaobj.write(0x00, 0x00, 0x00, (0x80 >> move), 0x00, 0x00, 0x00, 0x00);
+// 	}
+//
+// 	if((magentaobj.accelerometer_y >= -0.2) && (magentaobj.accelerometer_y <= -0))
+// 	{
+// 		magentaobj.write(0x00, 0x00, 0x00, 0x00, (0x80 >> move), 0x00, 0x00, 0x00);
+// 	}
+// 	if((magentaobj.accelerometer_y >=  -0.4) && (magentaobj.accelerometer_y <= -0.2))
+// 	{
+// 		magentaobj.write(0x00, 0x0, 0x00, 0x00, 0x00, (0x80 >> move), 0x00, 0x00);
+// 	}
+// 	if((magentaobj.accelerometer_y >= -0.7) && (magentaobj.accelerometer_y <= -0.5))
+// 	{
+// 		magentaobj.write(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (0x80 >> move), 0x00);
+// 	}
+// 	if((magentaobj.accelerometer_y >= -0.95) && (magentaobj.accelerometer_y <= -0.8))
+// 	{
+// 		magentaobj.write(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (0x80 >> move));
+// 	}
+// }
 
 void Servo()
 {
@@ -273,14 +288,15 @@ void ReadButton()
 {
     if(magentaobj.button_1 != button_last1 && magentaobj.button_1 == 1)
     {
-        acc = ACC;
-        segment = NORA;
-        servo = SERVO1;
-        grad1 = random(1, 180);
-        Servo();
+        // acc = ACC;
+        // segment = NORA;
+        // servo = SERVO1;
+        // grad1 = random(1, 180);
+        // Servo();
 
-        buzzer = PIEPSHIGH;
-        Buzzer();
+        // buzzer = PIEPSHIGH;
+        // Buzzer();
+        test ++;
     }
 
     if(magentaobj.button_2 != button_last2 && magentaobj.button_2 == 1)
@@ -307,7 +323,7 @@ void ReadButton()
 
     if(magentaobj.button_Center != button_lastCenter && magentaobj.button_Center == 1)
     {
-        acc = WRITE_ARRAY;
+        // acc = WRITE_ARRAY;
         servo = SERVO2;
 
         grad2 = random(1, 180);
@@ -339,7 +355,7 @@ void ReadButton()
 
     if(magentaobj.button_Right != button_lastRight && magentaobj.button_Right == 1)
     {
-        acc = 0;
+        // acc = 0;
         servo = SERVO2;
         grad2 = random(1, 180);
         Servo();
@@ -459,44 +475,92 @@ void loop()
 
     ReadButton();
 
-    switch (segment)
-    {
-        case NORA:
-            magentaobj.setSegmentAnzeige('N', 'O', 'R', 'A');
-        break;
-
-        case REMO:
-            magentaobj.setSegmentAnzeige('R', 'E', 'M', 'O');
-        break;
-    }
-
-    switch (acc)
+    switch(test)
     {
         case ACC:
-            Accelerometer();
+            magentaobj.setSegmentAnzeige('A', 'c', 'c',' ');
         break;
 
+        case POTI:
+            magentaobj.setSegmentAnzeige('P', 'o', 't','i');
+        break;
+        
+        case BUZZER:
+            magentaobj.setSegmentAnzeige('B', 'u', 'z','z');
+        break;
+
+        case SERVO:
+            magentaobj.setSegmentAnzeige('S', 'e', 'r','v');
+        break;
+        
+        case PROGRESSBAR:
+            magentaobj.setSegmentAnzeige('P', 'r', 'o','g');
+        break;
+
+        case JOYSTICK:
+            magentaobj.setSegmentAnzeige('J', 'o', 'y','s');
+        break;
+        
+        case RE_BUTTONS:
+            magentaobj.setSegmentAnzeige('R', 'E', 'B','u');
+        break;
+
+        case WRITE:
+            magentaobj.setSegmentAnzeige('W', 'r', 'i','t');
+        break;
+        
         case WRITE_ARRAY:
-            SMILEY_HAPPY();
-            magentaobj.write_array(&data[0]);
+            magentaobj.setSegmentAnzeige('W', 'A', 'r','r');
         break;
 
-        default:
-            Counter ++;
-            if(Counter <= 1)
-            {
-                magentaobj.sample(1);
-            }
-            if(Counter > 1)
-            {
-                magentaobj.sample(0);
-                if(Counter >= 2)
-                {
-                    Counter = 0;
-                }
-            }
+        case WRITE_CHAR:
+            magentaobj.setSegmentAnzeige('W', 'C', 'h','a');
         break;
+
+        case SAMPLE:
+            magentaobj.setSegmentAnzeige('S', 'a', 'm','p');
+        break;
+
     }
+
+    // switch (segment)
+    // {
+    //     case NORA:
+    //         magentaobj.setSegmentAnzeige('N', 'O', 'R', 'A');
+    //     break;
+
+    //     case REMO:
+    //         magentaobj.setSegmentAnzeige('R', 'E', 'M', 'O');
+    //     break;
+    // }
+
+    // switch (acc)
+    // {
+    //     case ACC:
+    //         Accelerometer();
+    //     break;
+
+    //     case WRITE_ARRAY:
+    //         SMILEY_HAPPY();
+    //         magentaobj.write_array(&data[0]);
+    //     break;
+
+    //     default:
+    //         Counter ++;
+    //         if(Counter <= 1)
+    //         {
+    //             magentaobj.sample(1);
+    //         }
+    //         if(Counter > 1)
+    //         {
+    //             magentaobj.sample(0);
+    //             if(Counter >= 2)
+    //             {
+    //                 Counter = 0;
+    //             }
+    //         }
+    //     break;
+    // }
 
     ChangeColor();
     magentaobj.setColor(r, g, b, BGC_r, BGC_g, BGC_b);
