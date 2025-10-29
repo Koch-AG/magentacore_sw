@@ -58,7 +58,7 @@ int maxUs = 2000;
 
 
 MagentaCore::MagentaCore() {
- 
+
 }
 
 void buzzerPlayTask(void * param) {
@@ -93,7 +93,7 @@ int MagentaCore::pcf_read() {
     return pcfBuffer;
 }
 
-int MagentaCore::read_io() { 
+int MagentaCore::read_io() {
     // printf("readIO aufgerufen\n");
     char pcfState;
     // microseconds_now = micros();
@@ -178,7 +178,7 @@ void MagentaCore::write (byte dataRow1, byte dataRow2, byte dataRow3, byte dataR
     // printf("Data_6: %i\n", data[6]);
     data[7] = dataRow8;
     // printf("Data_7: %i\n", data[7]);
-    
+
     writeDataToLED();
 }
 
@@ -196,16 +196,16 @@ void MagentaCore::write_char(char character) {
 
     for(int i = 0; i < 8; i++) {                                            /* read font from flash */
         buffer[i] = font[character][i];
-    
+
     }
 
     for (int i = 0; i < 8; i++) {                     /* write font from buffer to matrix display */
-        for (int j = 0; j < 8; j++) {    
+        for (int j = 0; j < 8; j++) {
             if (buffer[i] & (0x01 << j))
                 data[i] |= (0x80 >> j) << 1;
         }
     }
-    
+
     writeDataToLED();
 }
 
@@ -215,7 +215,7 @@ void  MagentaCore::writeDataToLED() {
         for (int x = 0; x < 8; x++) {
             // printf("x: %i, y: %i\n", x, y);
             LED_num = (y * 8) + x;
-            if (data[y] & (0x80 >> x)) { 
+            if (data[y] & (0x80 >> x)) {
                 // printf("LED: %i\n", LED_num);
                 magentacoreLed.setPixel(LED_num, basecolor);
             } else {
@@ -248,18 +248,18 @@ void MagentaCore::configPoti(int max, int min, int faktor) {
 
 void MagentaCore::sample(int pattern) {
     switch(pattern) {
-        
+
         case 0:
             matrix.setColor(0x80,0x30,0x00,0x00,0x00,0x20);
             for (int i = 0; i < 8; i++)
-                data[i] = ((i % 2) == 0) ? 0b10101010 : 0b01010101; 
+                data[i] = ((i % 2) == 0) ? 0b10101010 : 0b01010101;
 
             break;
         case 1:
             matrix.setColor(0x80,0x30,0x00,0x00,0x00,0x20);
             for (int i = 0; i < 8; i++){
                 data[i] = ((i % 2) == 0) ? 0b01010101 : 0b10101010;
-            } 
+            }
 
             break;
 
@@ -274,9 +274,9 @@ void MagentaCore::sample(int pattern) {
         default: {
             break;
         }
-    }   
+    }
 
-    writeDataToLED(); 
+    writeDataToLED();
 }
 
 int MagentaCore::getButtonPress(char pcfState) {
@@ -321,7 +321,7 @@ void MagentaCore::updateRotaryEncoderPoti() {
     int encoderCounter1 = encoder1.getCount();
     int encoderCounter2 = encoder2.getCount();
     int encoderCounter3 = encoder3.getCount();
-    
+
     encoder1.clearCount();
     encoder2.clearCount();
     encoder3.clearCount();
@@ -357,7 +357,7 @@ void MagentaCore::updateRotaryEncoderPoti() {
             potentiometer_3 = minPoti;
         }
     }
-    
+
 }
 
 void MagentaCore::getSensor() {
@@ -380,22 +380,25 @@ void MagentaCore::getSensorData(float *dataOut_x, float *dataOut_y, float *dataO
 void MagentaCore::progressbar(byte value, byte line) {
     data[line] = ((0xFF00 >> value) & 0xFF);
 
+    // printf("data: %x\n", data[line]);
+
     writeDataToLED();
+
 }
 
 void MagentaCore::playBuzzer(int tone) {
     switch(tone){
         case 0:
             rtttl::begin(BUZZER_PIN, BeepHigh);
-            
+
             break;
         case 1:
             rtttl::begin(BUZZER_PIN, BeepLow);
-            
+
             break;
         case 2:
             rtttl::begin(BUZZER_PIN, FurElise);
-            
+
             break;
     }
 }
