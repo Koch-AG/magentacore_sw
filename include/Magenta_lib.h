@@ -29,6 +29,15 @@ class MagentaCore{
         // @param doLedUpdate Optional. Normally set to true.
         void clear(bool doLedUpdate = true);
 
+        // @brief The setPicel() function 
+        // @param x 
+        // @param y
+        // @param r
+        // @param b
+        // @param b
+        // @param doLedUpdate Optional. Normally set to false.
+        void setPixelColor(int x, int y, byte r, byte g, byte b, bool doLedUpdate = false);
+
         // @brief The write() function takes eight values, known as bytes, and stores them in a data array. These bytes can be colors or brightness levels 
         // for the LEDs, for example. Once the values have been stored in the array, another function is called which then sends this data to the LED strip 
         // so that the LEDs display the new settings. In short: write() updates the data for the LEDs with new values and ensures that the LEDs actually display the changes.

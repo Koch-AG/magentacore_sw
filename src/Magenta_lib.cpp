@@ -49,6 +49,14 @@ ESP32PWM pwm;
 
 AlphaDispDriver magentacoreAlphaDisp;
 
+typedef struct pixel_t
+{
+    byte red;
+    byte green;
+    byte blue;
+}pixel_t;
+pixel_t pixelBuffer[8][8];
+
 static byte data[8] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
 int LED_num = 0;
@@ -162,6 +170,16 @@ void MagentaCore::clear(bool doLedUpdate) {
         writeDataToLED();
     }
 }
+
+void MagentaCore::setPixelColor(int x, int y, byte r, byte g, byte b, bool doLedUpdate) {
+    pixelBuffer[x][y].red   = r;
+    pixelBuffer[x][y].green = g;
+    pixelBuffer[x][y].blue  = b;
+
+    if(doLedUpdate == true)
+    {
+        writePixelsToLED();
+    }
 }
 
 void MagentaCore::write (byte dataRow1, byte dataRow2, byte dataRow3, byte dataRow4,
