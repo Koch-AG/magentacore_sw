@@ -168,6 +168,7 @@ class MagentaCore{
     private:
             bool isConnected();    
         void writeDataToLED();
+        void writePixelsToLED();
 
         int basecolor;
         int backgroundcolor;

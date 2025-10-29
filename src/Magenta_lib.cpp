@@ -232,6 +232,20 @@ void MagentaCore::write_char(char character) {
     writeDataToLED();
 }
 
+void MagentaCore::writePixelsToLED() {
+    int color = 0;
+    for (int y = 0; y < 8; y++) {
+        for (int x = 0; x < 8; x++) {
+            // printf("x: %i, y: %i\n", x, y);
+            LED_num = (y * 8) + x;
+            color = (pixelBuffer[x][y].red << 16) + (pixelBuffer[x][y].green << 8)+ pixelBuffer[x][y].blue;
+            // printf("LED: %i\n", color);
+            magentacoreLed.setPixel(LED_num, color);
+        }
+    }
+    magentacoreLed.show();
+}
+
 void  MagentaCore::writeDataToLED() {
     // printf("WriteDataToLED aufgerufen\n");
     for (int y = 0; y < 8; y++) {
