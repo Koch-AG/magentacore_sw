@@ -408,6 +408,11 @@ void MagentaCore::playBuzzer(int tone) {
     }
 }
 
+void MagentaCore::stopPlaying()
+{
+    rtttl::stop();
+}
+
 bool MagentaCore::isBuzzerPlaying(){
     return rtttl::isPlaying();
 }

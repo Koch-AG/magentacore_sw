@@ -111,6 +111,9 @@ class MagentaCore{
         // @param tone Provides sound examples.
         void playBuzzer(int tone);
         
+        // @brief
+        void stopPlaying();
+        
         // @brief The isBuzzerPlaying() function is a simple status-check function that returns whether the buzzer is playing.
         // @return 1 if the Buzzer ist playing 0 if it doesn't play
         bool isBuzzerPlaying();
