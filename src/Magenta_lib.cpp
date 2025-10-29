@@ -152,11 +152,16 @@ void MagentaCore::init() {
     xTaskCreate(buzzerPlayTask,"buzzerPlayTask",2048*2,NULL,10,NULL );      /* Used to pass out the created task's handle. */
 }
 
-void MagentaCore::clear() {
+void MagentaCore::clear(bool doLedUpdate) {
     for(int i=0;i<8;i++) {
         data[i]=0;
     }
-    writeDataToLED();
+
+    if(doLedUpdate == true)
+    {
+        writeDataToLED();
+    }
+}
 }
 
 void MagentaCore::write (byte dataRow1, byte dataRow2, byte dataRow3, byte dataRow4,

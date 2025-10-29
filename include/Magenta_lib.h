@@ -26,7 +26,8 @@ class MagentaCore{
 
         // @brief The clear() function ensures that all LEDs are switched off. It essentially deletes the current light patterns, resetting the LED 
         // strip to the background color. This allows you to reset the LED display and start again from the beginning.
-        void clear();
+        // @param doLedUpdate Optional. Normally set to true.
+        void clear(bool doLedUpdate = true);
 
         // @brief The write() function takes eight values, known as bytes, and stores them in a data array. These bytes can be colors or brightness levels 
         // for the LEDs, for example. Once the values have been stored in the array, another function is called which then sends this data to the LED strip 
