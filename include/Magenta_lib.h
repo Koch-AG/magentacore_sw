@@ -63,6 +63,9 @@ class MagentaCore{
         // @param character: The character to display on the matrix.
         void write_char(char character);
 
+        // @brief
+        void setRainbowColor(bool gradient = false);
+
         // @brief The setColor() function sets the foreground and background colors by allowing you to specify the red, green, and blue values in decimal (0-255), hex (0x00-0xFF), 
         // or binary (0b00000000-0b11111111). The smaller the number, the darker or less bright the LED will be. The values are stored in the variables basecolor (r, g, b) and
         // backgroundcolor (BGC_r, BGC_g, BGC_b), with the individual color components combined into a single number. This allows you to flexibly adjust the colors and easily apply
@@ -169,9 +172,12 @@ class MagentaCore{
             bool isConnected();    
         void writeDataToLED();
         void writePixelsToLED();
+        void hsv2rgb(uint32_t h, uint32_t s, uint32_t v, uint32_t *r, uint32_t *g, uint32_t *b);
 
         int basecolor;
         int backgroundcolor;
+        int rainbowcolor;
+            bool rainbowBaseColor;
 
         int32_t maxPoti;
         int32_t minPoti;
