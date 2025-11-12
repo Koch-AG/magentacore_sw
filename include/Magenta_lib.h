@@ -123,6 +123,8 @@ class MagentaCore{
         // @param tone Provides sound examples.
         void playBuzzer(int tone);
         
+        void setBuzzerPlay(int length, int sound);
+
         // @brief
         void stopPlaying();
         
