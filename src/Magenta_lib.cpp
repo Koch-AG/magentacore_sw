@@ -59,6 +59,9 @@ pixel_t pixelBuffer[8][8];
 
 static byte data[8] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
+static uint8_t led_strip_pixels[64 * 3];
+pixel_t colorBuffer[8][8];
+
 int LED_num = 0;
 
 int minUs = 1000;
@@ -137,10 +140,10 @@ void MagentaCore::init() {
     encoder3.setCount (0);
     encoder3.resumeCount();
 
-    ESP32PWM::allocateTimer(0);
-	ESP32PWM::allocateTimer(1);
+    ESP32PWM::allocateTimer(1);
 	ESP32PWM::allocateTimer(2);
 	ESP32PWM::allocateTimer(3);
+	ESP32PWM::allocateTimer(4);
 
     pinMode(SERVO1PIN, OUTPUT);
     pinMode(SERVO2PIN, OUTPUT);
@@ -254,7 +257,15 @@ void  MagentaCore::writeDataToLED() {
             LED_num = (y * 8) + x;
             if (data[y] & (0x80 >> x)) {
                 // printf("LED: %i\n", LED_num);
-                magentacoreLed.setPixel(LED_num, basecolor);
+                if (rainbowBaseColor == true)
+                {
+                    rainbowcolor = (colorBuffer[x][y].red << 16) + (colorBuffer[x][y].green << 8)+ colorBuffer[x][y].blue;
+                    magentacoreLed.setPixel(LED_num, rainbowcolor);
+                } 
+                else if (rainbowBaseColor == false)
+                {
+                    magentacoreLed.setPixel(LED_num, basecolor);
+                }
             } else {
                 magentacoreLed.setPixel(LED_num, backgroundcolor);
             }
@@ -264,9 +275,98 @@ void  MagentaCore::writeDataToLED() {
     magentacoreLed.show();
 }
 
+void MagentaCore::hsv2rgb(uint32_t h, uint32_t s, uint32_t v, uint32_t *r, uint32_t *g, uint32_t *b){
+    h %= 360; // h -> [0,360]
+    uint32_t rgb_max = v * 2.55f;
+    uint32_t rgb_min = rgb_max * (100 - s) / 100.0f;
+
+    uint32_t i = h / 60;
+    uint32_t diff = h % 60;
+
+    // RGB adjustment amount by hue
+    uint32_t rgb_adj = (rgb_max - rgb_min) * diff / 60;
+
+    switch (i) {
+    case 0:
+        *r = rgb_max;
+        *g = rgb_min + rgb_adj;
+        *b = rgb_min;
+        break;
+    case 1:
+        *r = rgb_max - rgb_adj;
+        *g = rgb_max;
+        *b = rgb_min;
+        break;
+    case 2:
+        *r = rgb_min;
+        *g = rgb_max;
+        *b = rgb_min + rgb_adj;
+        break;
+    case 3:
+        *r = rgb_min;
+        *g = rgb_max - rgb_adj;
+        *b = rgb_max;
+        break;
+    case 4:
+        *r = rgb_min + rgb_adj;
+        *g = rgb_min;
+        *b = rgb_max;
+        break;
+    default:
+        *r = rgb_max;
+        *g = rgb_min;
+        *b = rgb_max - rgb_adj;
+        break;
+    }
+}
+
+void MagentaCore::setRainbowColor(bool gradient){
+    static uint32_t red = 0;
+    static uint32_t green = 0;
+    static uint32_t blue = 0;
+    static uint16_t hue = 0;
+    static uint16_t start_rgb = 0;
+
+    int color = 0;
+    if (gradient == true)
+    {
+        hue = 0 * 360 / 50 + start_rgb;
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
+                // printf("x: %i, y: %i\n", x, y);
+                // LED_num = (y * 8) + x;
+                
+                hsv2rgb(hue, 100, 50, &red, &green, &blue);
+                colorBuffer[x][y].red = red;
+                colorBuffer[x][y].green = green;
+                colorBuffer[x][y].blue = blue;
+                hue+=5;
+            }
+        }
+    }
+    else if (gradient == false)
+    {
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
+                // printf("x: %i, y: %i\n", x, y);
+                // LED_num = (y * 8) + x;
+                hue = 0 * 360 / 50 + start_rgb;
+                hsv2rgb(hue, 100, 50, &red, &green, &blue);
+                colorBuffer[x][y].red = red;
+                colorBuffer[x][y].green = green;
+                colorBuffer[x][y].blue = blue;
+            }
+        }
+    }
+    start_rgb += 5; 
+    rainbowBaseColor = true;
+}
+
 void MagentaCore::setColor(byte r, byte g, byte b, byte backgroundColor_r, byte backgroundColor_g, byte backgroundColor_b) {
+    // printf("set Color to = r: %i - g:%i - b:%i\n", r, g, b);
     basecolor = (r << 16) + (g << 8)+ b;
     backgroundcolor = (backgroundColor_r << 16) + (backgroundColor_g << 8) + backgroundColor_b;
+    rainbowBaseColor = false;
 }
 
 void MagentaCore::configPoti(int max, int min, int faktor) {
@@ -438,6 +538,10 @@ void MagentaCore::playBuzzer(int tone) {
 
             break;
     }
+}
+
+void MagentaCore::setBuzzerPlay(int length, int sound) {
+
 }
 
 void MagentaCore::stopPlaying()
