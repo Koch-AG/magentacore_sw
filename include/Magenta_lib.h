@@ -64,6 +64,7 @@ class MagentaCore{
         void write_char(char character);
 
         // @brief
+        // @param gradient Optional. Normally set to false.
         void setRainbowColor(bool gradient = false);
 
         // @brief The setColor() function sets the foreground and background colors by allowing you to specify the red, green, and blue values in decimal (0-255), hex (0x00-0xFF), 
@@ -123,6 +124,9 @@ class MagentaCore{
         // @param tone Provides sound examples.
         void playBuzzer(int tone);
         
+        // @brief
+        // @param lengt
+        // @param sound
         void setBuzzerPlay(int length, int sound);
 
         // @brief
