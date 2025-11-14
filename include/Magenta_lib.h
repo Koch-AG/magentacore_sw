@@ -26,7 +26,17 @@ class MagentaCore{
 
         // @brief The clear() function ensures that all LEDs are switched off. It essentially deletes the current light patterns, resetting the LED 
         // strip to the background color. This allows you to reset the LED display and start again from the beginning.
-        void clear();
+        // @param doLedUpdate Optional. Normally set to true.
+        void clear(bool doLedUpdate = true);
+
+        // @brief The setPicel() function 
+        // @param x 
+        // @param y
+        // @param r
+        // @param b
+        // @param b
+        // @param doLedUpdate Optional. Normally set to false.
+        void setPixelColor(int x, int y, byte r, byte g, byte b, bool doLedUpdate = false);
 
         // @brief The write() function takes eight values, known as bytes, and stores them in a data array. These bytes can be colors or brightness levels 
         // for the LEDs, for example. Once the values have been stored in the array, another function is called which then sends this data to the LED strip 
@@ -52,6 +62,10 @@ class MagentaCore{
         // and then activates the LEDs to display the character. Finally, the data is sent to the LEDs so that the character is visible.
         // @param character: The character to display on the matrix.
         void write_char(char character);
+
+        // @brief
+        // @param gradient Optional. Normally set to false.
+        void setRainbowColor(bool gradient = false);
 
         // @brief The setColor() function sets the foreground and background colors by allowing you to specify the red, green, and blue values in decimal (0-255), hex (0x00-0xFF), 
         // or binary (0b00000000-0b11111111). The smaller the number, the darker or less bright the LED will be. The values are stored in the variables basecolor (r, g, b) and
@@ -110,6 +124,14 @@ class MagentaCore{
         // @param tone Provides sound examples.
         void playBuzzer(int tone);
         
+        // @brief
+        // @param lengt
+        // @param sound
+        void setBuzzerPlay(int length, int sound);
+
+        // @brief
+        void stopPlaying();
+        
         // @brief The isBuzzerPlaying() function is a simple status-check function that returns whether the buzzer is playing.
         // @return 1 if the Buzzer ist playing 0 if it doesn't play
         bool isBuzzerPlaying();
@@ -155,9 +177,13 @@ class MagentaCore{
     private:
             bool isConnected();    
         void writeDataToLED();
+        void writePixelsToLED();
+        void hsv2rgb(uint32_t h, uint32_t s, uint32_t v, uint32_t *r, uint32_t *g, uint32_t *b);
 
         int basecolor;
         int backgroundcolor;
+        int rainbowcolor;
+            bool rainbowBaseColor;
 
         int32_t maxPoti;
         int32_t minPoti;
