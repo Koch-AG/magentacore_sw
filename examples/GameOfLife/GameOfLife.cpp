@@ -4,7 +4,7 @@
 *   @date  	14.12.2014
 *	@date	14.01.2015
 *	@date	29.04.2025	(New project version)
-*   @brief  
+*   @brief  Main File of GameOfLife Example
 *   @bug    No known bugs.
 */
 
