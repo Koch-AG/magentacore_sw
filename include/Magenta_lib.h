@@ -118,16 +118,16 @@ class MagentaCore{
         // @param value Determines how much of the progress bar is filled (typically from 0 to 8). A higher value results in more LEDs lit.
         // @param line Specifies which row (or line) of the LED matrix the progress bar should be drawn on.
         void progressbar(byte value, byte line);
-        
+
         // @brief The playBuzzer() function plays different tones depending on the value of tone. For 0, 1, or 2, a specific melody or tone sequence 
         // (e.g., BeepHigh, BeepLow, HauntedHouse) is started at the buzzer pin.
         // @param tone Provides sound examples.
         void playBuzzer(int tone);
-        
+
         // @brief
         // @param lengt
         // @param sound
-        void setBuzzerPlay(int length, int sound);
+        void setBuzzerPlay(unsigned long duration, unsigned int frequency);
 
         // @brief
         void stopPlaying();
@@ -183,7 +183,7 @@ class MagentaCore{
         int basecolor;
         int backgroundcolor;
         int rainbowcolor;
-            bool rainbowBaseColor;
+            bool rainbowBaseColor = false;
 
         int32_t maxPoti;
         int32_t minPoti;

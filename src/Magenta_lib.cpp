@@ -2,6 +2,7 @@
 #include "font.h"
 #include "STK8321.h"
 #include "alphadisp.h"
+#include "FrequencBuzzer.h"
 
 #include <Wire.h>
 #include <LiteLED.h>
@@ -77,6 +78,9 @@ void buzzerPlayTask(void * param) {
     for(;;) {
         if(rtttl::isPlaying()) {
             rtttl::play();
+        }
+        else if(BuzzerFrequenc::isPlayingBuzFreq()) {
+            BuzzerFrequenc::playBuzFreq();
         }
         vTaskDelay(10/portTICK_PERIOD_MS);
     }
@@ -211,8 +215,9 @@ void MagentaCore::write (byte dataRow1, byte dataRow2, byte dataRow3, byte dataR
 void MagentaCore::write_array(byte matrixData[]) {
     for(int i = 0; i < 8; i++) {
         data[i] = matrixData[i];
+        // printf("%02X ", matrixData[i]);
     }
-
+    // printf("\n");
     writeDataToLED();
 }
 
@@ -540,8 +545,10 @@ void MagentaCore::playBuzzer(int tone) {
     }
 }
 
-void MagentaCore::setBuzzerPlay(int length, int sound) {
-
+void MagentaCore::setBuzzerPlay(unsigned long duration, unsigned int freq) {
+    unsigned long LengtOfTime = duration;
+    unsigned int frequency = freq;
+    BuzzerFrequenc::beginBuzFreq(BUZZER_PIN, LengtOfTime, frequency);
 }
 
 void MagentaCore::stopPlaying()
