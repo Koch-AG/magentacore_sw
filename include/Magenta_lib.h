@@ -137,10 +137,12 @@ class MagentaCore{
         bool isBuzzerPlaying();
         
         // @brief The setServo1() function sets the servo to the position specified in degrees (0-180). The servo compares the current position with the desired position in the background.
+        // You only can connect two small Servos on the Board or one big Servo on the board!!!
         // @param grad Specifies the value where the servo should be positioned. Normally set to 0.
         void setServo1(int grad = 0);
         
         // @brief The setServo2() function sets the servo to the position specified in degrees (0-180). The servo compares the current position with the desired position in the background.
+        // You only can connect two small Servos on the Board or one big Servo on the board!!!
         // @param grad Specifies the value where the servo should be positioned. Normally set to 0.
         void setServo2(int grad = 0);
         
