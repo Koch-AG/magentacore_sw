@@ -155,6 +155,10 @@ void loop()
     };
 
     twoDarray_in_oneDarray(dataOld);
+    if(magentaobj.button_2 == 1)
+    {
+        HelloNeighbors(dataOld);
+    }
     if(magentaobj.button_3 != button_last3 && magentaobj.button_3 == 1)
     {
         HelloNeighbors(dataOld);
