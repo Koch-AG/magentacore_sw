@@ -26,9 +26,9 @@ typedef struct
     int8_t y;
 }coordinate_t;
 
-int button_last1        = 0;
-int button_last2        = 0;
-int button_last3        = 0;
+int button_last1 = 0;
+int button_last2 = 0;
+int button_last3 = 0;
 
 void setup()
 {
@@ -36,19 +36,19 @@ void setup()
 	magentaobj.init();
 }
 
-void twoDarray_in_oneDarray(uint8_t idk_data[8][8])
+void twoDarray_in_oneDarray(uint8_t data[8][8])
 {
-    byte hihiArray[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    byte oneDarry[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 
     for(int i = 0; i < 8; i++)
     {
         for(int j = 0; j < 8; j++)
         {
-            hihiArray[i] |= (idk_data[i][j] << 7-j); // wenn farben implementieren andere lösung finden
+            oneDarry[i] |= (data[i][j] << 7-j); // wenn farben implementieren andere lösung finden
         }
     }
 
-    magentaobj.write_array(hihiArray);
+    magentaobj.write_array(oneDarry);
 
 }
 
@@ -141,26 +141,28 @@ void HelloNeighbors(uint8_t data[8][8])
 
 void loop()
 {
+    delay(100);
     magentaobj.read_io();
 
     static uint8_t dataOld[8][8] = {
         {0, 0, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 1, 1, 1, 1, 0, 0},
-        {0, 1, 0, 0, 0, 1, 0, 0},  //!Nur 1 oder 0 verwenden!
-        {0, 0, 0, 0, 0, 1, 0, 0},
-        {0, 1, 0, 0, 1, 0, 0, 0},
+        {0, 0, 0, 1, 1, 0, 0, 0},
+        {0, 0, 1, 1, 0, 0, 0, 0},  //!Nur 1 oder 0 verwenden!
+        {0, 0, 1, 0, 0, 0, 0, 0},
+        {0, 1, 1, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0},
     };
 
-    twoDarray_in_oneDarray(dataOld);
     if(magentaobj.button_2 == 1)
     {
+        twoDarray_in_oneDarray(dataOld);
         HelloNeighbors(dataOld);
     }
     if(magentaobj.button_3 != button_last3 && magentaobj.button_3 == 1)
     {
+        twoDarray_in_oneDarray(dataOld);
         HelloNeighbors(dataOld);
     }
     button_last3 = magentaobj.button_3;
