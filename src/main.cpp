@@ -21,7 +21,7 @@ int buzzer = 3;
 #define _180    1
 #define _90     2
 #define _0      3
-int servoGrad = _180;
+int servoGrad = _0;
 
 #define SHORT  5
 #define LONG   20
@@ -535,14 +535,17 @@ void RE_Buttons()
     {
         if (magentaobj.button_1 != button_last1 && magentaobj.button_1 == 1)
         {
+            magentaobj.setBuzzerPlay(1000, 340);
             magentaobj.write(192, 192, 192, 192, 192, 192, 192, 192);
         }
         if (magentaobj.button_2 != button_last2 && magentaobj.button_2 == 1)
         {
+            magentaobj.setBuzzerPlay(1000, 440);
             magentaobj.write(24, 24, 24, 24, 24, 24, 24, 24);
         }
         if (magentaobj.button_3 != button_last3 && magentaobj.button_3 == 1)
         {
+            magentaobj.setBuzzerPlay(1000, 540);
             magentaobj.write(3, 3, 3, 3, 3, 3, 3, 3);
         }
 
@@ -752,7 +755,7 @@ void Sample()
     static int muster = 0;
 
     counter ++;
-    
+   
     if(counter >= 20)
     {
         muster = 1;
@@ -775,7 +778,7 @@ void Sample()
     }
     else
     {
-        magentaobj.sample(muster);
+        magentaobj.sample(0);
     }
 
     button_lastLeft = magentaobj.button_Left;
