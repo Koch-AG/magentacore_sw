@@ -26,7 +26,17 @@ class MagentaCore{
 
         // @brief The clear() function ensures that all LEDs are switched off. It essentially deletes the current light patterns, resetting the LED 
         // strip to the background color. This allows you to reset the LED display and start again from the beginning.
-        void clear();
+        // @param doLedUpdate Optional. Normally set to true.
+        void clear(bool doLedUpdate = true);
+
+        // @brief The setPicel() function 
+        // @param x 
+        // @param y
+        // @param r
+        // @param b
+        // @param b
+        // @param doLedUpdate Optional. Normally set to false.
+        void setPixelColor(int x, int y, byte r, byte g, byte b, bool doLedUpdate = false);
 
         // @brief The write() function takes eight values, known as bytes, and stores them in a data array. These bytes can be colors or brightness levels 
         // for the LEDs, for example. Once the values have been stored in the array, another function is called which then sends this data to the LED strip 
@@ -52,6 +62,10 @@ class MagentaCore{
         // and then activates the LEDs to display the character. Finally, the data is sent to the LEDs so that the character is visible.
         // @param character: The character to display on the matrix.
         void write_char(char character);
+
+        // @brief
+        // @param gradient Optional. Normally set to false.
+        void setRainbowColor(bool gradient = false);
 
         // @brief The setColor() function sets the foreground and background colors by allowing you to specify the red, green, and blue values in decimal (0-255), hex (0x00-0xFF), 
         // or binary (0b00000000-0b11111111). The smaller the number, the darker or less bright the LED will be. The values are stored in the variables basecolor (r, g, b) and
@@ -104,21 +118,31 @@ class MagentaCore{
         // @param value Determines how much of the progress bar is filled (typically from 0 to 8). A higher value results in more LEDs lit.
         // @param line Specifies which row (or line) of the LED matrix the progress bar should be drawn on.
         void progressbar(byte value, byte line);
-        
+
         // @brief The playBuzzer() function plays different tones depending on the value of tone. For 0, 1, or 2, a specific melody or tone sequence 
         // (e.g., BeepHigh, BeepLow, HauntedHouse) is started at the buzzer pin.
         // @param tone Provides sound examples.
         void playBuzzer(int tone);
+
+        // @brief
+        // @param lengt
+        // @param sound
+        void setBuzzerPlay(unsigned long duration, unsigned int frequency);
+
+        // @brief
+        void stopPlaying();
         
         // @brief The isBuzzerPlaying() function is a simple status-check function that returns whether the buzzer is playing.
         // @return 1 if the Buzzer ist playing 0 if it doesn't play
         bool isBuzzerPlaying();
         
         // @brief The setServo1() function sets the servo to the position specified in degrees (0-180). The servo compares the current position with the desired position in the background.
+        // You only can connect two small Servos on the Board or one big Servo on the board!!!
         // @param grad Specifies the value where the servo should be positioned. Normally set to 0.
         void setServo1(int grad = 0);
         
         // @brief The setServo2() function sets the servo to the position specified in degrees (0-180). The servo compares the current position with the desired position in the background.
+        // You only can connect two small Servos on the Board or one big Servo on the board!!!
         // @param grad Specifies the value where the servo should be positioned. Normally set to 0.
         void setServo2(int grad = 0);
         
@@ -155,9 +179,13 @@ class MagentaCore{
     private:
             bool isConnected();    
         void writeDataToLED();
+        void writePixelsToLED();
+        void hsv2rgb(uint32_t h, uint32_t s, uint32_t v, uint32_t *r, uint32_t *g, uint32_t *b);
 
         int basecolor;
         int backgroundcolor;
+        int rainbowcolor;
+            bool rainbowBaseColor = false;
 
         int32_t maxPoti;
         int32_t minPoti;
