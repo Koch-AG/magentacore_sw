@@ -2,6 +2,7 @@
 #include "font.h"
 #include "STK8321.h"
 #include "alphadisp.h"
+#include "FrequencBuzzer.h"
 
 #include <Wire.h>
 #include <LiteLED.h>
@@ -31,15 +32,15 @@
 #define SERVO2PIN 15
 
 #define BUZZER_PIN 48
-const char * BeepHigh = "BeepHigh:d=4,o=5,b=100:2a5";
-const char * BeepLow = "BeepLow: d=4,o=5,b=100:2a4";
-const char * HauntedHouse = "FurElise:d=4,o=5,b=60:32e6,32d#6,32e6,32d#6,32e6,32b5,32d6,32c6,32a5,16p,32c5,32e5,32a5,32b5,16p,32e5,32gs5,32b5,32c6,16p,32e5,32e6,32d#6,32e6,32d#6,32e6,32b5,32d6,32c6,32a5,16p,32c5,32e5,32a5,32b5,16p,32e5,32c6,32b5,32a5,8e5,8c5,8a4,8b4,8p,8e4,8gs4,8b4,8c5,8p,8e4,8e5,8d#5,8e5,8d#5,8e5,8b4,8d5,8c5,8a4,16p,8c4,8e4,8a4,8b4,16p,8e4,8c5,8b4,8a4,8e5,8c5,8a4,8b4,8p,8e4,8e5,8d#5,8e5,8d#5,8e5,8b4,8d5,8c5,8a4,16p,8c4,8e4,8a4,8b4,16p,8e4,8c5,8b4,8a4";
+const char * BeepHigh = "BeepHigh:d=4,o=5,b=100:1a5";
+const char * BeepLow = "BeepLow:d=4,o=5,b=100:2a4";
+const char * FurElise = "FurElise:d=4,o=5,b=60:32e6,32d#6,32e6,32d#6,32e6,32b5,32d6,32c6,32a5,16p,32c5,32e5,32a5,32b5,16p,32e5,32gs5,32b5,32c6,16p,32e5,32e6,32d#6,32e6,32d#6,32e6,32b5,32d6,32c6,32a5,16p,32c5,32e5,32a5,32b5,16p,32e5,32c6,32b5,32a5,8e5,8c5,8a4,8b4,8p,8e4,8gs4,8b4,8c5,8p,8e4,8e5,8d#5,8e5,8d#5,8e5,8b4,8d5,8c5,8a4,16p,8c4,8e4,8a4,8b4,16p,8e4,8c5,8b4,8a4,8e5,8c5,8a4,8b4,8p,8e4,8e5,8d#5,8e5,8d#5,8e5,8b4,8d5,8c5,8a4,16p,8c4,8e4,8a4,8b4,16p,8e4,8c5,8b4,8a4";
 
 LiteLED magentacoreLed( LED_TYPE, LED_TYPE_IS_RGBW );    // create the LiteLED object; we're calling it "myLED"
 
-ESP32Encoder encoder0;
 ESP32Encoder encoder1;
 ESP32Encoder encoder2;
+ESP32Encoder encoder3;
 
 STK8321 stk8321;
 
@@ -49,7 +50,18 @@ ESP32PWM pwm;
 
 AlphaDispDriver magentacoreAlphaDisp;
 
+typedef struct pixel_t
+{
+    byte red;
+    byte green;
+    byte blue;
+}pixel_t;
+pixel_t pixelBuffer[8][8];
+
 static byte data[8] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+
+static uint8_t led_strip_pixels[64 * 3];
+pixel_t colorBuffer[8][8];
 
 int LED_num = 0;
 
@@ -58,7 +70,7 @@ int maxUs = 2000;
 
 
 MagentaCore::MagentaCore() {
- 
+
 }
 
 void buzzerPlayTask(void * param) {
@@ -66,6 +78,9 @@ void buzzerPlayTask(void * param) {
     for(;;) {
         if(rtttl::isPlaying()) {
             rtttl::play();
+        }
+        else if(BuzzerFrequenc::isPlayingBuzFreq()) {
+            BuzzerFrequenc::playBuzFreq();
         }
         vTaskDelay(10/portTICK_PERIOD_MS);
     }
@@ -93,15 +108,15 @@ int MagentaCore::pcf_read() {
     return pcfBuffer;
 }
 
-int MagentaCore::read_io() { 
+int MagentaCore::read_io() {
     // printf("readIO aufgerufen\n");
     char pcfState;
     // microseconds_now = micros();
     pcfState = pcf_read();
-    RotaryEncoder_Poti();
+    updateRotaryEncoderPoti();
     // printf("pcfState: %i\n", pcfState);
 
-    button_1 = button_2 = button_3 = 0x00;
+    button_1 = button_2 = button_3 = button_Center = button_Up = button_Right = button_Down = button_Left = 0x00;
 
     if (pcfState != 255) {
         getButtonPress(pcfState);
@@ -119,20 +134,20 @@ void MagentaCore::init() {
     magentacoreLed.begin( LED_GPIO, 64 );         // initialze the myLED object. Here we have 1 LED attached to the LED_GPIO pin
     magentacoreLed.brightness( LED_BRIGHT, 1 );
 
-    encoder0.attachHalfQuad (11, 10);
-    encoder0.setCount (0);
-    encoder0.resumeCount();
-    encoder1.attachHalfQuad (8, 7);
+    encoder1.attachHalfQuad (11, 10);
     encoder1.setCount (0);
     encoder1.resumeCount();
-    encoder2.attachHalfQuad (13, 14);
+    encoder2.attachHalfQuad (8, 7);
     encoder2.setCount (0);
     encoder2.resumeCount();
+    encoder3.attachHalfQuad (13, 14);
+    encoder3.setCount (0);
+    encoder3.resumeCount();
 
-    ESP32PWM::allocateTimer(0);
-	ESP32PWM::allocateTimer(1);
+    ESP32PWM::allocateTimer(1);
 	ESP32PWM::allocateTimer(2);
 	ESP32PWM::allocateTimer(3);
+	ESP32PWM::allocateTimer(4);
 
     pinMode(SERVO1PIN, OUTPUT);
     pinMode(SERVO2PIN, OUTPUT);
@@ -147,45 +162,63 @@ void MagentaCore::init() {
 
     setColor(0xB8, 0, 0xF8, 0x20, 0, 0x50);
 
-    ConfigPoti();
+    configPoti();
 
     xTaskCreate(buzzerPlayTask,"buzzerPlayTask",2048*2,NULL,10,NULL );      /* Used to pass out the created task's handle. */
 }
 
-void MagentaCore::clear() {
+void MagentaCore::clear(bool doLedUpdate) {
     for(int i=0;i<8;i++) {
         data[i]=0;
     }
-    writeDataToLED();
-}
 
-void MagentaCore::write (byte byte1, byte byte2, byte byte3, byte byte4,
-                         byte byte5, byte byte6, byte byte7, byte byte8) {
-    // printf("write aufgerufen\n");
-    data[0] = byte1;
-    // printf("Data_0: %i\n", data[0]);
-    data[1] = byte2;
-    // printf("Data_1: %i\n", data[1]);
-    data[2] = byte3;
-    // printf("Data_2: %i\n", data[2]);
-    data[3] = byte4;
-    // printf("Data_3: %i\n", data[3]);
-    data[4] = byte5;
-    // printf("Data_4: %i\n", data[4]);
-    data[5] = byte6;
-    // printf("Data_5: %i\n", data[5]);
-    data[6] = byte7;
-    // printf("Data_6: %i\n", data[6]);
-    data[7] = byte8;
-    // printf("Data_7: %i\n", data[7]);
-    
-    writeDataToLED();
-}
-
-void MagentaCore::write_array(byte matrix[]) {
-    for(int i = 0; i < 8; i++) {
-        data[i] = matrix[i];
+    if(doLedUpdate == true)
+    {
+        writeDataToLED();
     }
+}
+
+void MagentaCore::setPixelColor(int x, int y, byte r, byte g, byte b, bool doLedUpdate) {
+    pixelBuffer[x][y].red   = r;
+    pixelBuffer[x][y].green = g;
+    pixelBuffer[x][y].blue  = b;
+
+    if(doLedUpdate == true)
+    {
+        writePixelsToLED();
+    }
+}
+
+void MagentaCore::write (byte dataRow1, byte dataRow2, byte dataRow3, byte dataRow4,
+                         byte dataRow5, byte dataRow6, byte dataRow7, byte dataRow8) {
+    // printf("write aufgerufen\n");
+    data[0] = dataRow1;
+    // printf("Data_0: %i\n", data[0]);
+    data[1] = dataRow2;
+    // printf("Data_1: %i\n", data[1]);
+    data[2] = dataRow3;
+    // printf("Data_2: %i\n", data[2]);
+    data[3] = dataRow4;
+    // printf("Data_3: %i\n", data[3]);
+    data[4] = dataRow5;
+    // printf("Data_4: %i\n", data[4]);
+    data[5] = dataRow6;
+    // printf("Data_5: %i\n", data[5]);
+    data[6] = dataRow7;
+    // printf("Data_6: %i\n", data[6]);
+    data[7] = dataRow8;
+    // printf("Data_7: %i\n", data[7]);
+
+    writeDataToLED();
+}
+
+void MagentaCore::write_array(byte matrixData[]) {
+    for(int i = 0; i < 8; i++) {
+        data[i] = matrixData[i];
+        // printf("%02X ", matrixData[i]);
+    }
+    // printf("\n");
+    writeDataToLED();
 }
 
 void MagentaCore::write_char(char character) {
@@ -194,17 +227,31 @@ void MagentaCore::write_char(char character) {
 
     for(int i = 0; i < 8; i++) {                                            /* read font from flash */
         buffer[i] = font[character][i];
-    
+
     }
 
     for (int i = 0; i < 8; i++) {                     /* write font from buffer to matrix display */
-        for (int j = 0; j < 8; j++) {    
+        for (int j = 0; j < 8; j++) {
             if (buffer[i] & (0x01 << j))
                 data[i] |= (0x80 >> j) << 1;
         }
     }
-    
+
     writeDataToLED();
+}
+
+void MagentaCore::writePixelsToLED() {
+    int color = 0;
+    for (int y = 0; y < 8; y++) {
+        for (int x = 0; x < 8; x++) {
+            // printf("x: %i, y: %i\n", x, y);
+            LED_num = (y * 8) + x;
+            color = (pixelBuffer[x][y].red << 16) + (pixelBuffer[x][y].green << 8)+ pixelBuffer[x][y].blue;
+            // printf("LED: %i\n", color);
+            magentacoreLed.setPixel(LED_num, color);
+        }
+    }
+    magentacoreLed.show();
 }
 
 void  MagentaCore::writeDataToLED() {
@@ -213,9 +260,17 @@ void  MagentaCore::writeDataToLED() {
         for (int x = 0; x < 8; x++) {
             // printf("x: %i, y: %i\n", x, y);
             LED_num = (y * 8) + x;
-            if (data[y] & (0x80 >> x)) { 
+            if (data[y] & (0x80 >> x)) {
                 // printf("LED: %i\n", LED_num);
-                magentacoreLed.setPixel(LED_num, basecolor);
+                if (rainbowBaseColor == true)
+                {
+                    rainbowcolor = (colorBuffer[x][y].red << 16) + (colorBuffer[x][y].green << 8)+ colorBuffer[x][y].blue;
+                    magentacoreLed.setPixel(LED_num, rainbowcolor);
+                } 
+                else if (rainbowBaseColor == false)
+                {
+                    magentacoreLed.setPixel(LED_num, basecolor);
+                }
             } else {
                 magentacoreLed.setPixel(LED_num, backgroundcolor);
             }
@@ -225,12 +280,101 @@ void  MagentaCore::writeDataToLED() {
     magentacoreLed.show();
 }
 
-void MagentaCore::setColor(byte r, byte g, byte b, byte BGC_r, byte BGC_g, byte BGC_b) {
-    basecolor = (r << 16) + (g << 8)+ b;
-    backgroundcolor = (BGC_r << 16) + (BGC_g << 8) + BGC_b;
+void MagentaCore::hsv2rgb(uint32_t h, uint32_t s, uint32_t v, uint32_t *r, uint32_t *g, uint32_t *b){
+    h %= 360; // h -> [0,360]
+    uint32_t rgb_max = v * 2.55f;
+    uint32_t rgb_min = rgb_max * (100 - s) / 100.0f;
+
+    uint32_t i = h / 60;
+    uint32_t diff = h % 60;
+
+    // RGB adjustment amount by hue
+    uint32_t rgb_adj = (rgb_max - rgb_min) * diff / 60;
+
+    switch (i) {
+    case 0:
+        *r = rgb_max;
+        *g = rgb_min + rgb_adj;
+        *b = rgb_min;
+        break;
+    case 1:
+        *r = rgb_max - rgb_adj;
+        *g = rgb_max;
+        *b = rgb_min;
+        break;
+    case 2:
+        *r = rgb_min;
+        *g = rgb_max;
+        *b = rgb_min + rgb_adj;
+        break;
+    case 3:
+        *r = rgb_min;
+        *g = rgb_max - rgb_adj;
+        *b = rgb_max;
+        break;
+    case 4:
+        *r = rgb_min + rgb_adj;
+        *g = rgb_min;
+        *b = rgb_max;
+        break;
+    default:
+        *r = rgb_max;
+        *g = rgb_min;
+        *b = rgb_max - rgb_adj;
+        break;
+    }
 }
 
-void MagentaCore::ConfigPoti(int max, int min, int faktor) {
+void MagentaCore::setRainbowColor(bool gradient){
+    static uint32_t red = 0;
+    static uint32_t green = 0;
+    static uint32_t blue = 0;
+    static uint16_t hue = 0;
+    static uint16_t start_rgb = 0;
+
+    int color = 0;
+    if (gradient == true)
+    {
+        hue = 0 * 360 / 50 + start_rgb;
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
+                // printf("x: %i, y: %i\n", x, y);
+                // LED_num = (y * 8) + x;
+                
+                hsv2rgb(hue, 100, 50, &red, &green, &blue);
+                colorBuffer[x][y].red = red;
+                colorBuffer[x][y].green = green;
+                colorBuffer[x][y].blue = blue;
+                hue+=5;
+            }
+        }
+    }
+    else if (gradient == false)
+    {
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
+                // printf("x: %i, y: %i\n", x, y);
+                // LED_num = (y * 8) + x;
+                hue = 0 * 360 / 50 + start_rgb;
+                hsv2rgb(hue, 100, 50, &red, &green, &blue);
+                colorBuffer[x][y].red = red;
+                colorBuffer[x][y].green = green;
+                colorBuffer[x][y].blue = blue;
+            }
+        }
+    }
+    start_rgb += 5; 
+    rainbowBaseColor = true;
+}
+
+void MagentaCore::setColor(byte r, byte g, byte b, byte backgroundColor_r, byte backgroundColor_g, byte backgroundColor_b) {
+    // printf("set Color to = r: %i - g:%i - b:%i\n", r, g, b);
+    basecolor = (r << 16) + (g << 8)+ b;
+    backgroundcolor = (backgroundColor_r << 16) + (backgroundColor_g << 8) + backgroundColor_b;
+    rainbowBaseColor = false;
+}
+
+void MagentaCore::configPoti(int max, int min, int faktor) {
     if((max || min) != 0){
         maxPoti = max;
         minPoti = min;
@@ -246,18 +390,18 @@ void MagentaCore::ConfigPoti(int max, int min, int faktor) {
 
 void MagentaCore::sample(int pattern) {
     switch(pattern) {
-        
+
         case 0:
             matrix.setColor(0x80,0x30,0x00,0x00,0x00,0x20);
             for (int i = 0; i < 8; i++)
-                data[i] = ((i % 2) == 0) ? 0b10101010 : 0b01010101; 
+                data[i] = ((i % 2) == 0) ? 0b10101010 : 0b01010101;
 
             break;
         case 1:
             matrix.setColor(0x80,0x30,0x00,0x00,0x00,0x20);
             for (int i = 0; i < 8; i++){
                 data[i] = ((i % 2) == 0) ? 0b01010101 : 0b10101010;
-            } 
+            }
 
             break;
 
@@ -272,9 +416,9 @@ void MagentaCore::sample(int pattern) {
         default: {
             break;
         }
-    }   
+    }
 
-    writeDataToLED(); 
+    writeDataToLED();
 }
 
 int MagentaCore::getButtonPress(char pcfState) {
@@ -292,50 +436,48 @@ int MagentaCore::getButtonPress(char pcfState) {
         return button_3;
     }
     else if((pcfState & BUTTON_U) == 0) {
-        return BUTTON_U;
+        button_Up = 0x01;
+        return button_Up;
     }
     else if((pcfState & BUTTON_D) == 0) {
-        return BUTTON_D;
+        button_Down = 0x01;
+        return button_Down;
     }
     else if((pcfState & BUTTON_L) == 0) {
-        return BUTTON_L;
+        button_Left  = 0x01;
+        return button_Left;
     }
     else if((pcfState & BUTTON_R) == 0) {
-        return BUTTON_R;
+        button_Right = 0x01;
+        return button_Right;
     }
     else if((pcfState & BUTTON_C) == 0) {
-        return BUTTON_C;
+        button_Center = 0x01;
+        return button_Center;
     }
     return 0;
     // printf("getButtonPress fertig\n");
 }
 
-void MagentaCore::RotaryEncoder_Poti() {
-    int encoderCounter0 = encoder0.getCount();
+void MagentaCore::updateRotaryEncoderPoti() {
     int encoderCounter1 = encoder1.getCount();
     int encoderCounter2 = encoder2.getCount();
-    
-    encoder0.clearCount();
+    int encoderCounter3 = encoder3.getCount();
+
     encoder1.clearCount();
     encoder2.clearCount();
-
-    potentiometer_0 = potentiometer_0 + (encoderCounter0 * stepSize);
-    // printf("%i\n", potentiometer_0);
+    encoder3.clearCount();
 
     potentiometer_1 = potentiometer_1 + (encoderCounter1 * stepSize);
-    // printf("%i\n", potentiometer_1);
+    // printf("%i\n", potentiometer_0);
 
     potentiometer_2 = potentiometer_2 + (encoderCounter2 * stepSize);
+    // printf("%i\n", potentiometer_1);
+
+    potentiometer_3 = potentiometer_3 + (encoderCounter3 * stepSize);
     // printf("%i\n", potentiometer_2);
 
     if((maxPoti || minPoti) != 0) {
-        if(potentiometer_0 >= maxPoti) {
-            potentiometer_0 = maxPoti;
-        }
-        if(potentiometer_0 <= minPoti){
-            potentiometer_0 = minPoti;
-        }
-
         if(potentiometer_1 >= maxPoti) {
             potentiometer_1 = maxPoti;
         }
@@ -349,8 +491,15 @@ void MagentaCore::RotaryEncoder_Poti() {
         if(potentiometer_2 <= minPoti){
             potentiometer_2 = minPoti;
         }
+
+        if(potentiometer_3 >= maxPoti) {
+            potentiometer_3 = maxPoti;
+        }
+        if(potentiometer_3 <= minPoti){
+            potentiometer_3 = minPoti;
+        }
     }
-    
+
 }
 
 void MagentaCore::getSensor() {
@@ -362,35 +511,53 @@ void MagentaCore::getSensor() {
     // printf("X:%f - Y:-%f - Z:%f\n", x,y,z);
 }
 
-void MagentaCore::getSensorData(float *X_DataOut, float *Y_DataOut, float *Z_DataOut)
+void MagentaCore::getSensorData(float *dataOut_x, float *dataOut_y, float *dataOut_z)
 {
-    *X_DataOut = 0;
-    *Y_DataOut = 0;
-    *Z_DataOut = 0;
-    stk8321.STK8321_Getregister_data(X_DataOut, Y_DataOut, Z_DataOut);
+    *dataOut_x = 0;
+    *dataOut_y = 0;
+    *dataOut_z = 0;
+    stk8321.STK8321_Getregister_data(dataOut_x, dataOut_y, dataOut_z);
 }
 
 void MagentaCore::progressbar(byte value, byte line) {
     data[line] = ((0xFF00 >> value) & 0xFF);
 
+    // printf("data: %x\n", data[line]);
+
     writeDataToLED();
+
 }
 
-void MagentaCore::Buzzer(int tone) {
+void MagentaCore::playBuzzer(int tone) {
     switch(tone){
         case 0:
             rtttl::begin(BUZZER_PIN, BeepHigh);
-            
+
             break;
         case 1:
             rtttl::begin(BUZZER_PIN, BeepLow);
-            
+
             break;
         case 2:
-            rtttl::begin(BUZZER_PIN, HauntedHouse);
-            
+            rtttl::begin(BUZZER_PIN, FurElise);
+
             break;
     }
+}
+
+void MagentaCore::setBuzzerPlay(unsigned long duration, unsigned int freq) {
+    unsigned long LengtOfTime = duration;
+    unsigned int frequency = freq;
+    BuzzerFrequenc::beginBuzFreq(BUZZER_PIN, LengtOfTime, frequency);
+}
+
+void MagentaCore::stopPlaying()
+{
+    rtttl::stop();
+}
+
+bool MagentaCore::isBuzzerPlaying(){
+    return rtttl::isPlaying();
 }
 
 void MagentaCore::setServo1(int grad) {
