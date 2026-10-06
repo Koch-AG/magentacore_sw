@@ -29,12 +29,13 @@ class MagentaCore{
         // @param doLedUpdate Optional. Normally set to true.
         void clear(bool doLedUpdate = true);
 
-        // @brief The setPicel() function 
-        // @param x 
-        // @param y
-        // @param r
-        // @param b
-        // @param b
+        // @brief The setPixel() function makes it possible to set each individual LED to a different color. Once the desired LEDs have been set, set `doLedUpdate = true`.
+        // Then the data is written to the LED matrix.
+        // @param x Specifies the position on the x-axis.
+        // @param y Specifies the position on the y-axis.
+        // @param r Sets the intensity of the color red.
+        // @param b Sets the intensity of the color blue.
+        // @param b Sets the intensity of the color green.
         // @param doLedUpdate Optional. Normally set to false.
         void setPixelColor(int x, int y, byte r, byte g, byte b, bool doLedUpdate = false);
 
@@ -63,7 +64,7 @@ class MagentaCore{
         // @param character: The character to display on the matrix.
         void write_char(char character);
 
-        // @brief
+        // @brief The setRainbowColor() function creates a color gradient. If `gradient = true`, a color gradient is generated across the individual rows.
         // @param gradient Optional. Normally set to false.
         void setRainbowColor(bool gradient = false);
 
@@ -124,16 +125,16 @@ class MagentaCore{
         // @param tone Provides sound examples.
         void playBuzzer(int tone);
 
-        // @brief
-        // @param duration
-        // @param frequency
+        // @brief The setBuzzerPlay() function sets the duration and frequency for the buzzer to play.
+        // @param duration Set the duration of the tone.
+        // @param frequency Set the frequency of the tone.
         void setBuzzerPlay(unsigned long duration, unsigned int frequency);
 
         // @brief The play RTTTL() function can play entire RTTTL songs (examples songs: https://1j01.github.io/rtttl.js/)
         // @param *music Pointer for storing RTTTL songs.
         void playRTTTL(const char *music);
 
-        // @brief
+        // @brief The stopPlaying() function stops what the buzzer was playing.
         void stopPlaying();
         
         // @brief The isBuzzerPlaying() function is a simple status-check function that returns whether the buzzer is playing.

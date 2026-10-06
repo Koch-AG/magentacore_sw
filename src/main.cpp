@@ -793,7 +793,7 @@ void Sample()
     }
     else
     {
-        magentaobj.sample(0);
+        magentaobj.sample(muster);
     }
 
     button_lastLeft = magentaobj.button_Left;
