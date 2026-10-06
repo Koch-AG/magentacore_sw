@@ -48,6 +48,13 @@ int button_lastDown     = 0;
 int button_lastLeft     = 0;
 int button_lastCenter   = 0;
 
+const char *SantaClauseIsComingTonight = "SantaClauseIsComingTonight:o=5,d=4,b=200,b=200:g,8e,8f,g,g.,8g,8a,8b,c6,2c6,8e,8f,g,g,g,8a,8g,f,2f,e,g,c,e,d,2f,b4,1c,p,g,8e,8f,g,g.,8g,8a,8b,c6,2c6,8e,8f,g,g,g,8a,8g,f,f,e,g,c,e,d,2f,b4,1c,p,c6,d6,c6,b,c6,a,2a,c6,d6,c6,b,c6,2a.,d6,e6,d6,c#6,d6,b,b,b,8b,8c6,d6,c6,b,a,g,p,g.,8g,8e,8f,g,g.,8g,8a,8b,c6,2c6,8e,8f,g,g,g,8a,8g,8f,2f,e,g,c,e,d,2f,d6,1c6";
+const char *TeenageDirtBag = "TeenageDirtBag:o=5,d=4,b=200,b=200:d#6,e6,g#6,g#6,2f#6,2e6,2g#6,2d#6,2d#6,2e6,d#6,e6,g#6,g#6,2f#6,2e6,2g#6,2d#6,2d#6,2e6,2e6,g#6,g#6,2f#6,2e6,2g#6,2d#6,2d#6,e6,2d#6,2e6";
+const char *WinneThePooh = "WinneThePooh:o=5,d=4,b=125,b=125:8e,16d,e,d,p,8e,16d,e,d,p,8c,16c,8a#,16a#,8a,16a,g,f,e,d,d#,8e,16d,e,d,p,8e,16d,e,d,p,8c,16c,8a#,16a#,8a,16a,g,2f";
+const char *LetItSnow = "LetItSnow:o=5,d=8,b=120,b=120:c,c,c6,c6,4a#,4a,4g,4f,2c,c,16c,4g.,f,4g.,f,4e,2c,4d,d6,d6,4c6,4a#,4a,2g.,e6.,16d6,4c6,c6.,16a#,4a,a#.,16a,2f.,4c,c6,c6,4a#,4a,4g,4f,2c,c.,16c,4g.,f,4g.,f,4e,2c,4d,d6,d6,4c6,4a#,4a,2g.,e6.,16d6,4c6,c6.,16a#,4a,a.,16g,2f";
+
+const char *rtttl_songs[4] = {SantaClauseIsComingTonight, TeenageDirtBag, WinneThePooh, LetItSnow};
+
 void setup()
 {
     Serial.begin(115200);
@@ -268,10 +275,18 @@ void Buzzer()
     button_last2 = magentaobj.button_2;
     button_last3 = magentaobj.button_3;
 
+    if(magentaobj.button_Center != button_lastCenter && magentaobj.button_Center == 1)
+    {
+        int song = random(0, 3);
+        magentaobj.playRTTTL(rtttl_songs[song]);
+        printf("rtttl Song: %i\n", song); // 0 = Santa Clause Is Coming Tonight, 1 = Teenage Dirt Bag, 2= Winne The Pooh, 3 = Let It Snow
+    }
     if(magentaobj.button_Up != button_lastUp && magentaobj.button_Up == 1)
     {
         magentaobj.stopPlaying();
     }
+
+    button_lastCenter = magentaobj.button_Center;
     button_lastUp = magentaobj.button_Up;
 
 
