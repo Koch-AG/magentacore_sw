@@ -125,9 +125,13 @@ class MagentaCore{
         void playBuzzer(int tone);
 
         // @brief
-        // @param lengt
-        // @param sound
+        // @param duration
+        // @param frequency
         void setBuzzerPlay(unsigned long duration, unsigned int frequency);
+
+        // @brief The play RTTTL() function can play entire RTTTL songs (examples songs: https://1j01.github.io/rtttl.js/)
+        // @param *music Pointer for storing RTTTL songs.
+        void playRTTTL(const char *music);
 
         // @brief
         void stopPlaying();

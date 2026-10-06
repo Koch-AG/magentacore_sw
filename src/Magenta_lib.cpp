@@ -280,7 +280,7 @@ void  MagentaCore::writeDataToLED() {
     magentacoreLed.show();
 }
 
-void MagentaCore::hsv2rgb(uint32_t h, uint32_t s, uint32_t v, uint32_t *r, uint32_t *g, uint32_t *b){
+void MagentaCore::hsv2rgb(uint32_t h, uint32_t s, uint32_t v, uint32_t *r, uint32_t *g, uint32_t *b) {
     h %= 360; // h -> [0,360]
     uint32_t rgb_max = v * 2.55f;
     uint32_t rgb_min = rgb_max * (100 - s) / 100.0f;
@@ -325,7 +325,7 @@ void MagentaCore::hsv2rgb(uint32_t h, uint32_t s, uint32_t v, uint32_t *r, uint3
     }
 }
 
-void MagentaCore::setRainbowColor(bool gradient){
+void MagentaCore::setRainbowColor(bool gradient) {
     static uint32_t red = 0;
     static uint32_t green = 0;
     static uint32_t blue = 0;
@@ -511,8 +511,7 @@ void MagentaCore::getSensor() {
     // printf("X:%f - Y:-%f - Z:%f\n", x,y,z);
 }
 
-void MagentaCore::getSensorData(float *dataOut_x, float *dataOut_y, float *dataOut_z)
-{
+void MagentaCore::getSensorData(float *dataOut_x, float *dataOut_y, float *dataOut_z) {
     *dataOut_x = 0;
     *dataOut_y = 0;
     *dataOut_z = 0;
@@ -551,12 +550,15 @@ void MagentaCore::setBuzzerPlay(unsigned long duration, unsigned int freq) {
     BuzzerFrequenc::beginBuzFreq(BUZZER_PIN, LengtOfTime, frequency);
 }
 
-void MagentaCore::stopPlaying()
-{
+void MagentaCore::playRTTTL(const char *music) {
+    rtttl::begin(BUZZER_PIN, music);
+}
+
+void MagentaCore::stopPlaying() {
     rtttl::stop();
 }
 
-bool MagentaCore::isBuzzerPlaying(){
+bool MagentaCore::isBuzzerPlaying() {
     return rtttl::isPlaying();
 }
 
